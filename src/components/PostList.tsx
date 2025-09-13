@@ -3,10 +3,13 @@ import { db } from '../services/firebase';
 import { collection, getDoc, addDoc, getDocs, doc } from 'firebase/firestore';
 import { Post } from '../models/Post';
 import { User } from '../models/User';
+import Card from 'react-bootstrap/Card';
+import { Container } from 'react-bootstrap';
 
 
 interface PostListState {
     posts: Post[];
+    postTags: String[];
 }
 
 const usersRef = collection(db, "Users");
@@ -22,7 +25,7 @@ async function getAuthor(authorId: string): Promise<User> {
         username: docSnap.data()?.username,
         name: docSnap.data()?.name
     };
-    console.log(user);
+    //console.log(docSnap.metadata);
     return user;
 }
 
@@ -31,6 +34,7 @@ class PostList extends Component<{}, PostListState> {
         super(props);
         this.state = {
             posts: [],
+            postTags: []
         };
     }
 
@@ -39,64 +43,49 @@ class PostList extends Component<{}, PostListState> {
         getDocs(postsRef).then((querySnapshot) => {
             const posts: Post[] = [];
             querySnapshot.forEach((doc) => {
+                //console.log(doc.metadata);
                 posts.push({
                     id: doc.id,
                     ...doc.data()
                 } as Post);
             });
-            console.log(posts);
+            //console.log(posts);
+            let tags: string[] = [];
+            posts.forEach((post) => {
+                if (tags.length === 0) {
+                    tags.push()
+                }
+            });
+
             this.setState({ posts });
         });
 
-        /*
-        var _posts: Post[] = [];
-        getDocs(postsRef)
-            .then((docs) => {
 
-                docs.forEach(doc => {
-                    _posts.push({
-                        content: doc.data().content,
-                        createdAt: doc.data().createdAt,
-                        createdBy: doc.data().authorId,
-                        id: doc.id,
-                        title: doc.data().title
-                    })
-                });
-                this.setState({
-                    posts: _posts
-                });
-
-            })
-            .catch(e => console.error(e));
-            */
-
-        /*
-        db.collection('posts').get().then((querySnapshot) => {
-          const posts: Post[] = [];
-          querySnapshot.forEach((doc) => {
-            posts.push({
-              id: doc.id,
-              ...doc.data()
-            } as Post);
-          });
-          this.setState({ posts });
-        });
-        */
     }
 
     render() {
         return (
-            <div>
-                <h1>Blog Posts</h1>
-                <ul>
-                    {this.state.posts.map((post) => (
-                        <li key={post.id}>
-                            <h2>{post.title}</h2>
-                            <p>{post.content}</p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <Container>
+                Ultimas postagens...
+                {this.state.posts.map((post) => (
+
+                    <Card key={post.id} className='mb-3'
+                        style={{
+                            width: '35rem',
+                            textAlign: 'left'
+                        }}>
+                        <Card.Body>
+                            <Card.Title>{post.title}</Card.Title>
+                            <Card.Subtitle className='mb-2 text-muted'>Aqui vai a data{/*post.createdAt.getDate()*/}</Card.Subtitle>
+                            <Card.Text>
+                                {post.content}
+                            </Card.Text>
+                            <Card.Link>Continuar lendo...</Card.Link>
+                        </Card.Body>
+
+                    </Card>))}
+            </Container>
+
         );
     }
 }

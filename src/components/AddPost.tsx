@@ -44,7 +44,7 @@ class AddPost extends Component<{}, AddPostState> {
             tags: this.state.selectedTags.map(tags => tags.name)
         }).then(() => {
             alert('Post sucesfuly added!');
-            this.setState({ title: '', content: '', selectedTags: [] });
+            this.setState({ title: '', content: '', selectedTags: [], tags: [{ key: 1, name: 'manga' }, { key: 2, name: 'gaming' }, { key: 3, name: 'tech' }, { key: 4, name: 'pessoal' }] });
 
         });
     }

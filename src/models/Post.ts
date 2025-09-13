@@ -6,4 +6,5 @@ export interface Post {
     content: string;
     createdBy: string;
     createdAt: Date;
+    tags: string[];
 }
